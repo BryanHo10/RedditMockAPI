@@ -17,13 +17,32 @@ User Microservice
     DELETE
         -Deactivate account
 '''
+# (email) will be a query parameter
 @app.route('/reddit-mock/api/v1.0/user/<userid>',methods=['GET','PUT','DELETE'])
-def unique_user():
+def unique_user(userid):
     error = None
     if request.method == 'DELETE':
+        return delete_user(userid)
     elif request.method == 'PUT':
-    
+        return 
     return 'Index Page'
+
+# Decrement Karma from unique user
+@app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
+def unique_user(userid):
+    error = None
+    elif request.method == 'PUT':
+        return 
+    return 'Index Page'
+
+# Increment Karma for unique user
+@app.route('/reddit-mock/api/v1.0/user/<userid>/karma/increment',methods=['PUT'])
+def unique_user(userid):
+    error = None
+    elif request.method == 'PUT':
+        return 
+    return 'Index Page'
+
 @app.route('/reddit-mock/api/v1.0/user',methods=['GET','POST'])
 def user():
     if request.moethod == 'POST':
@@ -42,30 +61,31 @@ Post Microservice
     POST:
         - Create a new Post
 '''
+
+# (n):size will be a query parameter
 @app.route('reddit-mock/api/v1.0/post')
 def list_posts():
-    return 'List of Posts'
+    query_parameters = request.args
 
+    num_post = query_parameters.get('size')
+    return list_posts()
+
+# (n):size will be a query parameter
 @app.route('reddit-mock/api/v1.0/post/<communityid>')
-def list_community_posts():
-    return 'List of Posts'
+def list_community_posts(communityid):
+    query_parameters = request.args
+
+    num_post = query_parameters.get('size')
+    return list_posts(communityid)
 
 @app.route('reddit-mock/api/v1.0/user/<userid>/post',method=['POST'])
-def user_post():
-    return 'Post created by User'
+def user_post(userid):
+    return create_user_post(userid)
 
 @app.route('reddit-mock/api/v1.0/user/<userid>/post/<postid>',method=['GET','DELETE'])
-def unique_post():
+def unique_post(userid,postid):
     error = None
     if request.method == 'DELETE':
+        return delete_user_post(userid,postid)
 
-    return 'Post by user'
-
-
-
-
-
-@app.route('/hello')
-def hello_world():
-    return 'Hello, World!'
-
+    return show_user_post(userid,postid)
