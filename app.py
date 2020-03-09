@@ -29,25 +29,24 @@ def unique_user(userid):
 
 # Decrement Karma from unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
-def unique_user(userid):
+def karma_dec(userid):
     error = None
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         return 
     return 'Index Page'
 
 # Increment Karma for unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/increment',methods=['PUT'])
-def unique_user(userid):
+def karma_inc(userid):
     error = None
-    elif request.method == 'PUT':
+    if request.method == 'PUT':
         return 
     return 'Index Page'
 
 @app.route('/reddit-mock/api/v1.0/user',methods=['GET','POST'])
 def user():
-    if request.moethod == 'POST':
-    
-    return 'All Users'
+    if request.method == 'POST':
+    	return 'All Users'
 
 '''
 Post Microservice
@@ -63,7 +62,7 @@ Post Microservice
 '''
 
 # (n):size will be a query parameter
-@app.route('reddit-mock/api/v1.0/post')
+@app.route('/reddit-mock/api/v1.0/post')
 def list_posts():
     query_parameters = request.args
 
@@ -71,18 +70,18 @@ def list_posts():
     return list_posts()
 
 # (n):size will be a query parameter
-@app.route('reddit-mock/api/v1.0/post/<communityid>')
+@app.route('/reddit-mock/api/v1.0/post/<communityid>')
 def list_community_posts(communityid):
     query_parameters = request.args
 
     num_post = query_parameters.get('size')
     return list_posts(communityid)
 
-@app.route('reddit-mock/api/v1.0/user/<userid>/post',method=['POST'])
+@app.route('/reddit-mock/api/v1.0/user/<userid>/post',methods=['POST'])
 def user_post(userid):
     return create_user_post(userid)
 
-@app.route('reddit-mock/api/v1.0/user/<userid>/post/<postid>',method=['GET','DELETE'])
+@app.route('/reddit-mock/api/v1.0/user/<userid>/post/<postid>',methods=['GET','DELETE'])
 def unique_post(userid,postid):
     error = None
     if request.method == 'DELETE':
