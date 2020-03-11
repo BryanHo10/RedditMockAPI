@@ -20,9 +20,9 @@ import sqlite3
 
 def delete_user(userid):
 	conn = sqlite3.connect('example.db')
-	sql = 'DELETE FROM user WHERE id=?'
-    cur = conn.cursor()
-    cur.execute(sql, (id,))
+	cur = conn.cursor()
+	sql = 'DELETE FROM user WHERE userid=?'
+    cur.execute(sql, (userid,))
     conn.commit()
 
     return
@@ -40,6 +40,15 @@ def dec_karma(userid):
     return
 
 def create_user(username,email,password):
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+	cur.execute('''CREATE TABLE IF NOT EXISTS user (
+    			username text PRIMARY KEY,
+    			email text NOT NULL,
+    			password text NOT NULL)''')
+    cur.execute("INSERT INTO user VALUES (username, email, password)")
+	conn.commit()
+	conn.close()
     return
 
 def get_all_users():
