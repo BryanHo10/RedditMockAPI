@@ -32,7 +32,7 @@ def unique_user(userid):
         email_addr = query_parameters['email'] 
     	return update_email(userid, email_addr)
 
-    return get_useer(userid)
+    return get_user(userid)
 
 # Decrement Karma from unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
