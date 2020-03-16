@@ -2,8 +2,8 @@ from flask import Flask
 from flask import request
 from flask import render_template
 
-from User/userAPI.py import *
-from Post/postAPI.py import *
+import User.userAPI
+import Post.postAPI
 
 app = Flask(__name__)
 
@@ -25,21 +25,21 @@ User Microservice
 def unique_user(userid):
     query_parameters = request.args
 
-
     if request.method == 'DELETE':
         return delete_user(userid)
     elif request.method == 'PUT':
-        email_addr = query_parameters['email'] 
-    	return update_email(userid, email_addr)
-
+        email_addr = query_parameters['email']
+        return update_email(userid,email_addr)
+    
     return get_user(userid)
 
 # Decrement Karma from unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
 def dec_karma(userid):
     error = None
+
     if request.method == 'PUT':
-        return dec_karma(userid)
+        return dec_karma(userid) 
 
     return error
 
@@ -47,17 +47,18 @@ def dec_karma(userid):
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/increment',methods=['PUT'])
 def inc_karma(userid):
     error = None
-
+    
     if request.method == 'PUT':
         return inc_karma(userid)
-
+    
     return error
 
 @app.route('/reddit-mock/api/v1.0/user',methods=['GET','POST'])
 def user():
-    if request.method == 'POST':
-    	return create_user()
+    if request.moethod == 'POST':
+        return create_user()
     return get_all_users()
+
 
 '''
 Post Microservice
@@ -86,7 +87,7 @@ def list_community_posts(communityid):
     query_parameters = request.args
 
     num_post = query_parameters.get('size')
-    return get_posts_from(num_post, communityid)
+    return get_posts_from(num_post,communityid)
 
 @app.route('/reddit-mock/api/v1.0/user/<userid>/post',methods=['POST'])
 def user_post(userid):
