@@ -2,8 +2,8 @@ from flask import Flask
 from flask import request
 from flask import render_template
 
-import User.userAPI
-import Post.postAPI
+import User.userAPI as userService
+import Post.postAPI as postService
 
 app = Flask(__name__)
 
@@ -26,12 +26,12 @@ def unique_user(userid):
     query_parameters = request.args
 
     if request.method == 'DELETE':
-        return delete_user(userid)
+        return userService.delete_user(userid)
     elif request.method == 'PUT':
         email_addr = query_parameters['email']
-        return update_email(userid,email_addr)
+        return userService.update_email(userid,email_addr)
     
-    return get_user(userid)
+    return userService.get_user(userid)
 
 # Decrement Karma from unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
@@ -39,7 +39,7 @@ def dec_karma(userid):
     error = None
 
     if request.method == 'PUT':
-        return dec_karma(userid) 
+        return userService.dec_karma(userid) 
 
     return error
 
@@ -49,15 +49,17 @@ def inc_karma(userid):
     error = None
     
     if request.method == 'PUT':
-        return inc_karma(userid)
+        return userService.inc_karma(userid)
     
     return error
 
 @app.route('/reddit-mock/api/v1.0/user',methods=['GET','POST'])
 def user():
-    if request.moethod == 'POST':
-        return create_user()
-    return get_all_users()
+    request_json = request.get_json(force=True)
+    if request.method == 'POST':
+        print(request_json)
+        return userService.create_user(request_json["username"],request_json["email"],request_json["password"])
+    return userService.get_all_users()
 
 
 '''
@@ -95,7 +97,6 @@ def user_post(userid):
 
 @app.route('/reddit-mock/api/v1.0/user/<userid>/post/<postid>',methods=['GET','DELETE'])
 def unique_post(userid,postid):
-    error = None
     if request.method == 'DELETE':
         return delete_post(userid,postid)
 

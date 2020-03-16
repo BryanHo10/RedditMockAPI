@@ -38,7 +38,7 @@ def update_email(userid,email_addr):
 def get_user(userid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("SELECT * user WHERE userid=?", (userid))
+	cur.execute("SELECT * FROM user WHERE userid=?", (userid))
 
 	user_info = cur.fetchall()
 
@@ -69,7 +69,7 @@ def dec_karma(userid):
 def get_karma(userid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("SELECT karma user WHERE userid=?", (userid))
+	cur.execute("SELECT karma FROM user WHERE userid=?", (userid))
 
 	user_karma = cur.fetchall()
 
@@ -85,7 +85,7 @@ def create_user(username_in,email_in,password_in):
 				email text NOT NULL,
 				password text NOT NULL,
 				karma real DEFAULT 0)''')
-	cur.execute("INSERT INTO user VALUES (?, ?, ?)",(username_in,email_in,password_in))
+	cur.execute("INSERT INTO user VALUES (?, ?, ?, 0)",(username_in,email_in,password_in))
 	conn.commit()
 	conn.close()
 	return get_user(username_in)
@@ -94,7 +94,7 @@ def get_all_users():
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 
-	cur.execute("SELECT * user")
+	cur.execute("SELECT * FROM user")
 	users_info = cur.fetchall()
 
 	conn.commit()
