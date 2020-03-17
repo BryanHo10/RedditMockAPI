@@ -99,3 +99,7 @@ def unique_post(userid,postid):
         return delete_post(userid,postid)
 
     return get_user_post(userid,postid)
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return ("404: Page not found!")
