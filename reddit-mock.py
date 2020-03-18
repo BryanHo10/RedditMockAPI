@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import render_template
+import json
 
 import User.userAPI as userService
 import Post.postAPI as postService
@@ -55,11 +56,17 @@ def inc_karma(userid):
 
 @app.route('/reddit-mock/api/v1.0/user',methods=['GET','POST'])
 def user():
-    request_json = request.get_json(force=True)
+    
     if request.method == 'POST':
-        print(request_json)
-        return userService.create_user(request_json["username"],request_json["email"],request_json["password"])
-    return userService.get_all_users()
+        request_json = request.get_json(force=True)
+        userService.create_user(request_json["username"],request_json["email"],request_json["password"])
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
+    elif request.method == 'GET':
+        all_users = userService.get_all_users()
+        for user in all_users:
+            print(user)
+        return json.dumps({'success':True , 'data':all_users}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
 
 
 '''

@@ -88,7 +88,6 @@ def create_user(username_in,email_in,password_in):
 	cur.execute("INSERT INTO user VALUES (?, ?, ?, 0)",(username_in,email_in,password_in))
 	conn.commit()
 	conn.close()
-	return get_user(username_in)
 
 def get_all_users():
 	conn = sqlite3.connect('example.db')
