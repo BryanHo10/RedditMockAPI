@@ -5,7 +5,7 @@ import sqlite3
 
 # Create table
 #cur.execute('''CREATE TABLE stocks
-             #(date text, trans text, symbol text, qty real, price real)''')
+			 #(date text, trans text, symbol text, qty real, price real)''')
 
 # Insert a row of data
 #cur.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
@@ -22,34 +22,81 @@ def delete_user(userid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 	sql = 'DELETE FROM user WHERE userid=?'
-    cur.execute(sql, (userid,))
-    conn.commit()
+	cur.execute(sql, (userid))
+	conn.commit()
 
-    return
+	return True
 
 def update_email(userid,email_addr):
-    return
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+	cur.execute("UPDATE user SET email=? WHERE userid=?", (email_addr,userid))
+	conn.commit()
+	conn.close()
+	return True
 
 def get_user(userid):
-    return
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+	cur.execute("SELECT * FROM user WHERE userid=?", (userid))
+
+	user_info = cur.fetchall()
+
+	conn.commit()
+	conn.close()
+	return user_info
+
+
 
 def inc_karma(userid):
-    return
+	new_karma = get_karma(userid) + 1
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+	cur.execute("UPDATE user SET karma=? WHERE userid=?", (new_karma,userid))
+	conn.commit()
+	conn.close()
+	return True
 
 def dec_karma(userid):
-    return
+	new_karma = get_karma(userid) - 1
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+	cur.execute("UPDATE user SET karma=? WHERE userid=?", (new_karma,userid))
+	conn.commit()
+	conn.close()
+	return True
 
-def create_user(username,email,password):
+def get_karma(userid):
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+	cur.execute("SELECT karma FROM user WHERE userid=?", (userid))
+
+	user_karma = cur.fetchall()
+
+	conn.commit()
+	conn.close()
+	return user_karma
+
+def create_user(username_in,email_in,password_in):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 	cur.execute('''CREATE TABLE IF NOT EXISTS user (
-    			username text PRIMARY KEY,
-    			email text NOT NULL,
-    			password text NOT NULL)''')
-    cur.execute("INSERT INTO user VALUES (username, email, password)")
+				username text PRIMARY KEY,
+				email text NOT NULL,
+				password text NOT NULL,
+				karma real DEFAULT 0)''')
+	cur.execute("INSERT INTO user VALUES (?, ?, ?, 0)",(username_in,email_in,password_in))
 	conn.commit()
 	conn.close()
-    return
+	return get_user(username_in)
 
 def get_all_users():
-    return
+	conn = sqlite3.connect('example.db')
+	cur = conn.cursor()
+
+	cur.execute("SELECT * FROM user")
+	users_info = cur.fetchall()
+
+	conn.commit()
+	conn.close()
+	return users_info
