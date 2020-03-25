@@ -31,8 +31,10 @@ def unique_user(userid):
     elif request.method == 'PUT':
         email_addr = query_parameters['email']
         return userService.update_email(userid,email_addr)
-    
-    return userService.get_user(userid)
+    elif request.method == 'GET':
+        return json.dumps({'success':True , 'data':userService.get_user(userid)}), 200, {'ContentType':'application/json'}
+
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
 
 # Decrement Karma from unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
@@ -58,7 +60,7 @@ def inc_karma(userid):
 def user():
     
     if request.method == 'POST':
-        request_json = request.get_json(force=True)
+        request_json = request.form
         userService.create_user(request_json["username"],request_json["email"],request_json["password"])
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
     elif request.method == 'GET':

@@ -28,6 +28,18 @@ user_data.append({
     "password":"a168fa5fd5anj6^kl"
 })
 
-for user in user_data:
-    resp = requests.post(base_url+api_url+"user",data = user)
-    print(user,' was added')
+# for user in user_data:
+#     resp = requests.post(base_url+api_url+"user",data=user)
+#     print(user,' was added')
+
+good_user = "teacher_V"
+print(requests.get(base_url+api_url+"user/"+good_user))
+
+
+
+# for i in range(9):
+#     print(requests.put(base_url+api_url+"user/"+good_user+"/karma/increment"))
+
+# bad_user = "bryanHd"
+# for i in range(3):
+#     print(requests.put(base_url+api_url+"user/"+bad_user+"/karma/decrement"))
