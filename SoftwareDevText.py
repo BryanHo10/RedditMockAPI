@@ -27,6 +27,11 @@ user_data.append({
     "email":"prof@fullerton.edu",
     "password":"a168fa5fd5anj6^kl"
 })
+user_data.append({
+    "username":"SadGuy911",
+    "email":"sad@wahooo.edu",
+    "password":"sdfgsdfg^kl"
+})
 # Test Create user
 for user in user_data:
     requests.post(base_url+api_url+"user",data=user)
@@ -59,3 +64,12 @@ user_lost = "bryanHd"
 change_mail=requests.put(base_url+api_url+"user/"+user_lost,data={"email":"bryanHDTV@yahoo.com"})
 print(change_mail,change_mail.text)
 
+# Delete User
+dlt_user = "SadGuy911"
+delete_user = requests.delete(base_url+api_url+"user/"+dlt_user)
+print(delete_user,delete_user.text)
+
+# Check All users 
+all_users = requests.get(base_url+api_url+"user")
+for user in all_users.json()['data']:
+    print(user)

@@ -21,8 +21,8 @@ import sqlite3
 def delete_user(userid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	sql = 'DELETE FROM user WHERE userid=?'
-	cur.execute(sql, (userid))
+	sql = 'DELETE FROM user WHERE username=?'
+	cur.execute(sql, [userid])
 	conn.commit()
 
 	return True
