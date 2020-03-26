@@ -33,7 +33,7 @@ def update_email(userid,email_addr):
 	cur.execute("UPDATE user SET email=? WHERE username=?", [email_addr,userid])
 	conn.commit()
 	conn.close()
-	return True
+	return get_user(userid)
 
 def get_user(userid):
 	conn = sqlite3.connect('example.db')
@@ -75,7 +75,7 @@ def get_karma(userid):
 
 	conn.commit()
 	conn.close()
-	return user_karma
+	return user_karma[0][0]
 
 def create_user(username_in,email_in,password_in):
 	conn = sqlite3.connect('example.db')
@@ -85,7 +85,9 @@ def create_user(username_in,email_in,password_in):
 				email text NOT NULL,
 				password text NOT NULL,
 				karma real DEFAULT 0)''')
-	cur.execute("INSERT INTO user VALUES (?, ?, ?, 0)",[username_in,email_in,password_in])
+	cur.execute("SELECT * FROM user WHERE username=?", [username_in])
+	if not cur.fetchall():
+		cur.execute("INSERT INTO user VALUES (?, ?, ?, 0)",[username_in,email_in,password_in])
 	conn.commit()
 	conn.close()
 

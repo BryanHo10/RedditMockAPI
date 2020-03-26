@@ -27,19 +27,35 @@ user_data.append({
     "email":"prof@fullerton.edu",
     "password":"a168fa5fd5anj6^kl"
 })
+# Test Create user
+for user in user_data:
+    requests.post(base_url+api_url+"user",data=user)
 
-# for user in user_data:
-#     resp = requests.post(base_url+api_url+"user",data=user)
-#     print(user,' was added')
+# Test Get All users
+all_users = requests.get(base_url+api_url+"user")
+for user in all_users.json()['data']:
+    print(user)
 
+
+# Test Get Specific user
 good_user = "teacher_V"
-print(requests.get(base_url+api_url+"user/"+good_user))
+get_user=requests.get(base_url+api_url+"user/"+good_user)
+print(get_user, get_user.text)
 
 
+# Test Increment Karma
+for i in range(9):
+    inc_karma= requests.put(base_url+api_url+"user/"+good_user+"/karma/increment")
+    print(inc_karma,inc_karma.text)
 
-# for i in range(9):
-#     print(requests.put(base_url+api_url+"user/"+good_user+"/karma/increment"))
+# Test Decrement Karma
+bad_user = "bryanHd"
+for i in range(3):
+    dec_karma= requests.put(base_url+api_url+"user/"+bad_user+"/karma/decrement")
+    print(dec_karma,dec_karma.text)
 
-# bad_user = "bryanHd"
-# for i in range(3):
-#     print(requests.put(base_url+api_url+"user/"+bad_user+"/karma/decrement"))
+# Update Email
+user_lost = "bryanHd"
+change_mail=requests.put(base_url+api_url+"user/"+user_lost,data={"email":"bryanHDTV@yahoo.com"})
+print(change_mail,change_mail.text)
+

@@ -24,13 +24,12 @@ User Microservice
 # (email) will be a query parameter
 @app.route('/reddit-mock/api/v1.0/user/<userid>',methods=['GET','PUT','DELETE'])
 def unique_user(userid):
-    query_parameters = request.args
-
     if request.method == 'DELETE':
-        return userService.delete_user(userid)
+        return json.dumps({'success':True , 'data':userService.delete_user(userid)}), 200, {'ContentType':'application/json'}
     elif request.method == 'PUT':
-        email_addr = query_parameters['email']
-        return userService.update_email(userid,email_addr)
+        email_addr = request.form['email']
+        print(email_addr)
+        return json.dumps({'success':True , 'data':userService.update_email(userid,email_addr)}), 200, {'ContentType':'application/json'}
     elif request.method == 'GET':
         return json.dumps({'success':True , 'data':userService.get_user(userid)}), 200, {'ContentType':'application/json'}
 
@@ -39,22 +38,18 @@ def unique_user(userid):
 # Decrement Karma from unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/decrement',methods=['PUT'])
 def dec_karma(userid):
-    error = None
-
     if request.method == 'PUT':
-        return userService.dec_karma(userid) 
+        return json.dumps({'success':True , 'data':userService.dec_karma(userid) }), 200, {'ContentType':'application/json'}
 
-    return error
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
 
 # Increment Karma for unique user
 @app.route('/reddit-mock/api/v1.0/user/<userid>/karma/increment',methods=['PUT'])
-def inc_karma(userid):
-    error = None
-    
+def inc_karma(userid):   
     if request.method == 'PUT':
-        return userService.inc_karma(userid)
+        return json.dumps({'success':True , 'data':userService.inc_karma(userid)}), 200, {'ContentType':'application/json'}
     
-    return error
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
 
 @app.route('/reddit-mock/api/v1.0/user',methods=['GET','POST'])
 def user():
