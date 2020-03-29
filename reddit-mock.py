@@ -28,7 +28,6 @@ def unique_user(userid):
         return json.dumps({'success':True , 'data':userService.delete_user(userid)}), 200, {'ContentType':'application/json'}
     elif request.method == 'PUT':
         email_addr = request.form['email']
-        print(email_addr)
         return json.dumps({'success':True , 'data':userService.update_email(userid,email_addr)}), 200, {'ContentType':'application/json'}
     elif request.method == 'GET':
         return json.dumps({'success':True , 'data':userService.get_user(userid)}), 200, {'ContentType':'application/json'}
@@ -60,8 +59,6 @@ def user():
         return json.dumps({'success':True}), 200, {'ContentType':'application/json'} 
     elif request.method == 'GET':
         all_users = userService.get_all_users()
-        for user in all_users:
-            print(user)
         return json.dumps({'success':True , 'data':all_users}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
 
@@ -80,28 +77,32 @@ Post Microservice
 '''
 
 # (n):size will be a query parameter
-@app.route('/reddit-mock/api/v1.0/post')
-def list_posts():
-    query_parameters = request.args
-
-    num_post = query_parameters.get('size')
-    return get_posts_from(num_post)
+@app.route('/reddit-mock/api/v1.0/post/<size>',methods=["GET"])
+def list_posts(size):
+    if request.method == 'GET':
+        return json.dumps({'success':True , 'data':postService.get_posts_from(size)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
 
 # (n):size will be a query parameter
-@app.route('/reddit-mock/api/v1.0/post/<communityid>')
-def list_community_posts(communityid):
-    query_parameters = request.args
-
-    num_post = query_parameters.get('size')
-    return get_posts_from(num_post,communityid)
+@app.route('/reddit-mock/api/v1.0/post/<communityid>/<size>',methods=["GET"])
+def list_community_posts(communityid,size):
+    if request.method == 'GET':
+        return json.dumps({'success':True , 'data':postService.get_posts_from(size,communityid)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
 
 @app.route('/reddit-mock/api/v1.0/user/<userid>/post',methods=['POST'])
 def user_post(userid):
-    return create_post(userid)
+    if request.method == 'POST':
+        request_json = request.form
+        if "URL" in request_json:
+            return json.dumps({'success':True , 'data':postService.create_post(userid,request_json["message"],request_json["communityID"],request_json["URL"])}), 200, {'ContentType':'application/json'}
+        return json.dumps({'success':True , 'data':postService.create_post(userid,request_json["message"],request_json["communityID"])}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
 
 @app.route('/reddit-mock/api/v1.0/user/<userid>/post/<postid>',methods=['GET','DELETE'])
 def unique_post(userid,postid):
     if request.method == 'DELETE':
-        return delete_post(userid,postid)
-
-    return get_user_post(userid,postid)
+        return json.dumps({'success':True , 'data':postService.delete_post(userid,postid)}), 200, {'ContentType':'application/json'}
+    elif request.method == "GET":
+        return json.dumps({'success':True , 'data':postService.get_post(userid,postid)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  

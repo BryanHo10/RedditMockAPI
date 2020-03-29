@@ -43,7 +43,6 @@ def get_user(userid):
 
 	conn.commit()
 	conn.close()
-	print(user_info)
 	return user_info
 
 
