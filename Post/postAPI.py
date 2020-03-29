@@ -4,9 +4,9 @@ def get_posts_from(n,community_id = None):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 	if community_id != None:
-		cur.execute("SELECT * FROM posts WHERE communityID=? LIMIT ?",(community_id,n))
+		cur.execute("SELECT * FROM posts WHERE communityID=? ORDER BY date_created DESC LIMIT ? ",(community_id,n))
 	else:
-		cur.execute("SELECT * FROM posts LIMIT ?",(n))
+		cur.execute("SELECT * FROM posts ORDER BY date_created DESC LIMIT ?",(n))
 
 	posts_info = cur.fetchall()
 	conn.commit()
@@ -26,7 +26,7 @@ def get_post(userid,postid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 
-	cur.execute("SELECT * FROM posts WHERE username=? postID=?",(userid,postid))
+	cur.execute("SELECT * FROM posts WHERE username=? AND postID=?",(userid,postid))
 	post_info = cur.fetchall()
 
 	conn.commit()
@@ -36,7 +36,7 @@ def get_post(userid,postid):
 def delete_post(userid,postid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("DELETE FROM posts WHERE username=? postID=?",(userid,postid))
+	cur.execute("DELETE FROM posts WHERE username=? AND postID=?",(userid,postid))
 	conn.commit()
 	conn.close()
 	return True
@@ -50,7 +50,7 @@ def create_post(userid,message,community_id,url=None):
 				message text NOT NULL,
 				communityID text NOT NULL,
 				URL text DEFAULT None,
-				date_created text NOT NULL),
+				date_created text NOT NULL)
 				''')
 	unix=time.time()
 	datestamp=datetime.datetime.fromtimestamp(unix).strftime('%Y-%m-%d %H:%M:%S')
@@ -58,4 +58,3 @@ def create_post(userid,message,community_id,url=None):
 	cur.execute("INSERT INTO posts VALUES (?, ?, ?, ?, ?, ?)",(postID,userid,message,community_id,url,datestamp))
 	conn.commit()
 	conn.close()
-	return get_post(userid,postID)
