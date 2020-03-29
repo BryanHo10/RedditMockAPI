@@ -95,8 +95,8 @@ def user_post(userid):
     if request.method == 'POST':
         request_json = request.form
         if "URL" in request_json:
-            return json.dumps({'success':True , 'data':postService.create_post(userid,request_json["message"],request_json["communityID"],request_json["URL"])}), 200, {'ContentType':'application/json'}
-        return json.dumps({'success':True , 'data':postService.create_post(userid,request_json["message"],request_json["communityID"])}), 200, {'ContentType':'application/json'}
+            return json.dumps({'success':True , 'data':postService.create_post(userid,request_json["title"],request_json["message"],request_json["communityID"],request_json["URL"])}), 200, {'ContentType':'application/json'}
+        return json.dumps({'success':True , 'data':postService.create_post(userid,request_json["title"],request_json["message"],request_json["communityID"])}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
 
 @app.route('/reddit-mock/api/v1.0/user/<userid>/post/<postid>',methods=['GET','DELETE'])

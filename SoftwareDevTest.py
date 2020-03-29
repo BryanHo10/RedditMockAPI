@@ -103,44 +103,52 @@ print("----------------------------------------------------------")
 post_data=[]
 post_data.append({
     "username" :user_data[0]["username"],
+    "title":"CSUF",
     "message" :"Hello World",
     "communityID" :"CPSC",
     "URL" :"https://wwww.google.com",
 })
 post_data.append({
     "username" :user_data[3]["username"],
+    "title":"Confused",
     "message" :"What's the Homework tonight?",
     "communityID" :"CPSC",
 })
 post_data.append({
     "username" :user_data[1]["username"],
+    "title":"CSUF",
     "message" :"Is this CPSC449?",
     "communityID" :"MATH",
 })
 post_data.append({
     "username" :user_data[0]["username"],
+    "title":"Correction",
     "message" :"No this is MATH",
     "communityID" :"MATH",
     "URL" :"https://www.fullerton.edu",
 })
 post_data.append({
     "username" :user_data[2]["username"],
+    "title":"Great News",
     "message" :"We finished the Project in time",
     "communityID" :"CPSC",
 })
 post_data.append({
     "username" :user_data[0]["username"],
+    "title":"Cool",
     "message" :"Is this Reddit?",
     "communityID" :"HIST",
     "URL":"https://www.reddit.com"
 })
 post_data.append({
     "username" :user_data[3]["username"],
+    "title":"Congrats",
     "message" :"Nice Job Everyone",
     "communityID" :"CPSC",
 })
 post_data.append({
     "username" :user_data[0]["username"],
+    "title":"Lost",
     "message" :"Where is Everyone?",
     "communityID" :"HIST",
 })
@@ -149,7 +157,7 @@ post_data.append({
 print("----------------------------------------------------------")
 for posting in post_data:
     requests.post(base_url+api_url+"user/"+posting["username"]+"/post",data=posting)
-    print(posting["username"] + " wrote "+posting["message"]+" on "+ posting["communityID"])
+    print(posting["username"] + " wrote "+posting["title"]+" -- { "+posting["message"]+" } "+" on "+ posting["communityID"])
     time.sleep(1.5)
 
 
