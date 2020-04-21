@@ -5,6 +5,7 @@ import json
 
 import User.userAPI as userService
 import Post.postAPI as postService
+import Voting.votesAPI as voteService
 
 app = Flask(__name__)
 
@@ -106,3 +107,56 @@ def unique_post(userid,postid):
     elif request.method == "GET":
         return json.dumps({'success':True , 'data':postService.get_post(userid,postid)}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
+
+
+'''
+Voting Microservice
+    GET:
+        - Retrieve existing post's current vote
+        - List n most voted posts from any community
+        - Return list of sorted scores (w/ from a list of post id's)
+    PUT:
+        - Upvote a post
+        - Downvote a post
+    
+'''
+
+@app.route('/reddit-mock/api/v1.0/post/<postid>/vote', methods=['GET'])
+def retrieve_post_score(postid):
+    if request.method == 'GET':
+        return json.dumps({'success':True,'data':voteService.get_unique_post_score(postid)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+@app.route('/reddit-mock/api/v1.0/post/vote/<size>', methods=['GET'])
+def retrieve_list_post(size):
+    if request.method == 'GET':
+        return json.dumps({'success':True,'data':voteService.get_scores(size)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+@app.route('/reddit-mock/api/v1.0/post/vote', methods=['GET'])
+def retrieve_unique_list():
+    if request.method == 'GET':
+        request_json = request.form
+        return json.dumps({'success':True,'data':voteService.get_list_scores(request_json["postIDset"])}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+
+
+@app.route('/reddit-mock/api/v1.0/user/<userid>/post/<postid>/upvote', methods=['PUT'])
+def upvote(userid,postid):
+    if request.method == 'PUT':
+        return json.dumps({'success':True,'data':voteService.upvote_post(userid,postid)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+@app.route('/reddit-mock/api/v1.0/user/<userid>/post/<postid>/downvote', methods=['PUT'])
+def downvote(userid,postid):
+    if request.method == 'PUT':
+        return json.dumps({'success':True,'data':voteService.downvote_post(userid,postid)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'}  
+
+'''
+Messaging Microservice
+    POST:
+        - Send Message
+    DELETE:
+        - Delete Message
+    PUT:
+        - Favorite Message
+    
+'''
