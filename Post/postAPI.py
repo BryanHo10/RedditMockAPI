@@ -54,11 +54,12 @@ def create_post(userid,title,message,community_id,url=None):
 				message text NOT NULL,
 				communityID text NOT NULL,
 				URL text DEFAULT None,
-				date_created text NOT NULL)
+				date_created text NOT NULL,
+				votes real Default 0)
 				''')
 	unix=time.time()
 	datestamp=datetime.datetime.fromtimestamp(unix).strftime('%Y-%m-%d %H:%M:%S')
 	postID = str(uuid.uuid4())
-	cur.execute("INSERT INTO posts VALUES (?, ?, ?, ?, ?, ?, ?)",(postID,userid,title,message,community_id,url,datestamp))
+	cur.execute("INSERT INTO posts VALUES (?, ?, ?, ?, ?, ?, ?, 0)",(postID,userid,title,message,community_id,url,datestamp))
 	conn.commit()
 	conn.close()
