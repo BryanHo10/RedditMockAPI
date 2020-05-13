@@ -6,6 +6,7 @@ import json
 import User.userAPI as userService
 import Post.postAPI as postService
 import Voting.votesAPI as voteService
+import Message.messageAPI as messageService
 
 app = Flask(__name__)
 
@@ -160,3 +161,20 @@ Messaging Microservice
         - Favorite Message
     
 '''
+
+@app.route('/reddit-mock/api/v1.0/user/<userid>/message', methods=['POST','GET'])
+def user_message(userid):
+    if request.method == 'GET':
+        return json.dumps({'success':True,'data':messageService.get_user_message(userid)}), 200, {'ContentType':'application/json'}
+    elif request.method == 'POST':
+        request_json = request.form
+        return json.dumps({'success':True,'data':messageService.create_message(userid,request_json["content"],request_json["recipient"])}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+
+@app.route('/reddit-mock/api/v1.0/user/<userid>/message/<messageid>', methods=['DELETE'.'PUT'])
+def message_actions(userid,messageid):
+    if request.method == 'DELETE':
+        return json.dumps({'success':True,'data':messageService.delete_message(messageid)}), 200, {'ContentType':'application/json'}
+    elif request.method == 'PUT':
+        return json.dumps({'success':True,'data':messageService.favorite_message(messageid)}), 200, {'ContentType':'application/json'}
+    return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
