@@ -171,7 +171,7 @@ def user_message(userid):
         return json.dumps({'success':True,'data':messageService.create_message(userid,request_json["content"],request_json["recipient"])}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
 
-@app.route('/reddit-mock/api/v1.0/user/<userid>/message/<messageid>', methods=['DELETE'.'PUT'])
+@app.route('/reddit-mock/api/v1.0/user/<userid>/message/<messageid>', methods=['DELETE','PUT'])
 def message_actions(userid,messageid):
     if request.method == 'DELETE':
         return json.dumps({'success':True,'data':messageService.delete_message(messageid)}), 200, {'ContentType':'application/json'}
