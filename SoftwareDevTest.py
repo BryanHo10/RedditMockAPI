@@ -152,7 +152,7 @@ post_data.append({
     "message" :"Where is Everyone?",
     "communityID" :"HIST",
 })
-
+list_post_id = []
 # Create Posts
 print("----------------------------------------------------------")
 for posting in post_data:
@@ -170,7 +170,10 @@ num_posts = requests.get(base_url+api_url+"post/5")
 print("Overall Posts: 5 most recent")
 print()
 for posts in num_posts.json()['data']:
+    list_post_id.append(posts[0])
+    requests.put(base_url+api_url+"user/"+posts[1]+"/post/"+posts[0]+"/upvote")
     print(posts)
+requests.put(base_url+api_url+"user/"+posts[1]+"/post/"+posts[0]+"/upvote")
 
 print("----------------------------------------------------------")
 
@@ -187,6 +190,45 @@ print("Latest Post")
 get_latest = requests.get(base_url+api_url+"user/"+num_posts.json()["data"][0][1]+"/post/"+num_posts.json()["data"][0][0])
 print(get_latest.json()["data"])
 
+
+
+# Post Voting
+print("----------------------------------------------------------")
+print("----------------------------------------------------------")
+
+print("Upvote Latest Post")
+requests.put(base_url+api_url+"user/"+num_posts.json()["data"][0][1]+"/post/"+num_posts.json()["data"][0][0]+"/upvote")
+get_latest_vote = requests.get(base_url+api_url+"post/"+num_posts.json()["data"][0][0]+"/vote")
+print(get_latest.json()["data"], get_latest_vote.json())
+
+print("Downvote Latest Post")
+requests.put(base_url+api_url+"user/"+num_posts.json()["data"][0][1]+"/post/"+num_posts.json()["data"][0][0]+"/downvote")
+requests.put(base_url+api_url+"user/"+num_posts.json()["data"][0][1]+"/post/"+num_posts.json()["data"][0][0]+"/downvote")
+requests.put(base_url+api_url+"user/"+num_posts.json()["data"][0][1]+"/post/"+num_posts.json()["data"][0][0]+"/downvote")
+requests.put(base_url+api_url+"user/"+num_posts.json()["data"][0][1]+"/post/"+num_posts.json()["data"][0][0]+"/downvote")
+get_latest_vote = requests.get(base_url+api_url+"post/"+num_posts.json()["data"][0][0]+"/vote")
+print(get_latest.json()["data"], get_latest_vote.json())
+print()
+# Get top 3 most voted posts
+print("Get top 3 most voted posts")
+get_most_voted = requests.get(base_url+api_url+"post/"+"vote/3")
+print(get_most_voted.json()["data"])
+print()
+# Get sorted list from postIds
+print("Get sorted list from postIds ",list_post_id)
+list_post_id.pop()
+list_post_id.pop()
+list_post_id.pop()
+list_post_id.pop()
+
+get_most_voted = requests.get(base_url+api_url+"post/"+"vote",data={"postIDset":list_post_id})
+print(get_most_voted.json())
+
+print()
+
+
+
+
 print("----------------------------------------------------------")
 print("----------------------------------------------------------")
 print("Deleted Latest Post : ",num_posts.json()["data"][0][1],num_posts.json()["data"][0][0])
@@ -202,3 +244,69 @@ for posts in num_posts.json()['data']:
     print(posts)
 
 print("----------------------------------------------------------")
+print("----------------------------------------------------------")
+
+
+# Create Messages
+message_data=[]
+message_data.append({
+    "sender" :user_data[0]["username"],
+    "recipient":user_data[2]["username"],
+    "content" :"Hey can you keep a secret?"
+})
+message_data.append({
+    "sender" :user_data[1]["username"],
+    "recipient":user_data[3]["username"],
+    "content" :"Hey I hear someone talking about us"
+})
+message_data.append({
+    "sender" :user_data[2]["username"],
+    "recipient":user_data[0]["username"],
+    "content" :"sure can..."
+})
+message_data.append({
+    "sender" :user_data[2]["username"],
+    "recipient":user_data[0]["username"],
+    "content" :"wait..."
+})
+message_data.append({
+    "sender" :user_data[3]["username"],
+    "recipient":user_data[1]["username"],
+    "content" :"nah man you hearing things"
+})
+message_data.append({
+    "sender" :user_data[0]["username"],
+    "recipient":user_data[2]["username"],
+    "content" :"I don't believe you"
+})
+
+# View Messages Sent 
+print("----------------------------------------------------------")
+for messaging in message_data:
+    requests.post(base_url+api_url+"user/"+messaging["sender"]+"/message",data=messaging)
+    print(messaging["sender"] + " sent message to "+ messaging["recipient"]+ " saying: "+" -- { "+messaging["content"]+" } ")
+    time.sleep(1.5)
+
+
+print("----------------------------------------------------------")
+
+print("----------------------------------------------------------")
+
+# Delete Message
+print("Print Message caessar54 sent to bryanHd")
+print()
+get_user_message_from = requests.get(base_url+api_url+"user/"+messaging["recipient"]+"/message")
+
+for messages in get_user_message_from.json()["data"]:
+    print("Message Data: ",messages)
+
+print()
+print("Delete Message caessar54 sent to bryanHd")
+print()
+delete_message = requests.delete(base_url+api_url+"user/"+messaging["recipient"]+"/message/"+get_user_message_from.json()["data"][0][0])
+
+get_user_message_from = requests.get(base_url+api_url+"user/"+messaging["recipient"]+"/message")
+
+for messages in get_user_message_from.json()["data"]:
+    print("Message Data: ",messages)
+
