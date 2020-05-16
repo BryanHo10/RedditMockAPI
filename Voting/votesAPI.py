@@ -7,7 +7,7 @@ def get_unique_post_score(postid):
 	post_score = cur.fetchall()
 	conn.commit()
 	conn.close()
-	return post_score
+	return post_score[0][0]
 
 def get_scores(list_size):
 	conn = sqlite3.connect('example.db')
@@ -21,7 +21,7 @@ def get_scores(list_size):
 def get_list_scores(postIDset):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("SELECT * FROM posts where postID IN (?) ORDER BY votes DESC", [",".join(postIDset)] )
+	cur.execute("SELECT * FROM posts where postID IN (?) ORDER BY votes DESC", [postIDset])
 	post_scores = cur.fetchall()
 	conn.commit()
 	conn.close()
@@ -31,7 +31,7 @@ def upvote_post(userID,postID):
 	new_vote = get_unique_post_score(postID) + 1
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("UPDATE posts SET vote=? WHERE postID=?", [new_vote,postID])
+	cur.execute("UPDATE posts SET votes=? WHERE postID=?", [new_vote,postID])
 	conn.commit()
 	conn.close()
 	return True
@@ -40,7 +40,7 @@ def downvote_post(userID,postID):
 	new_vote = get_unique_post_score(postID) - 1
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("UPDATE posts SET vote=? WHERE postID=?", [new_vote,postID])
+	cur.execute("UPDATE posts SET votes=? WHERE postID=?", [new_vote,postID])
 	conn.commit()
 	conn.close()
 	return True

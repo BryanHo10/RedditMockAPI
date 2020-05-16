@@ -4,9 +4,9 @@ def get_posts_from(n,community_id = None):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 	if community_id != None:
-		cur.execute("SELECT postID,username,title,communityID,date_created FROM posts WHERE communityID=? ORDER BY date_created DESC LIMIT ? ",(community_id,n))
+		cur.execute("SELECT postID,username,title,communityID,date_created,votes FROM posts WHERE communityID=? ORDER BY date_created DESC LIMIT ? ",(community_id,n))
 	else:
-		cur.execute("SELECT postID,username,title,communityID,date_created FROM posts ORDER BY date_created DESC LIMIT ?",(n))
+		cur.execute("SELECT postID,username,title,communityID,date_created,votes FROM posts ORDER BY date_created DESC LIMIT ?",(n))
 
 	posts_info = cur.fetchall()
 	conn.commit()
@@ -17,7 +17,7 @@ def get_posts_from(n,community_id = None):
 def get_user_posts(userid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
-	cur.execute("SELECT postID,username,title,communityID,date_created FROM posts WHERE username=?",(userid))
+	cur.execute("SELECT postID,username,title,communityID,date_created,votes FROM posts WHERE username=?",(userid))
 	user_posts_info = cur.fetchall()
 	conn.commit()
 	conn.close()
@@ -28,7 +28,7 @@ def get_post(userid,postid):
 	conn = sqlite3.connect('example.db')
 	cur = conn.cursor()
 
-	cur.execute("SELECT postID,username,title,communityID,date_created FROM posts WHERE username=? AND postID=?",(userid,postid))
+	cur.execute("SELECT postID,username,title,communityID,date_created,votes FROM posts WHERE username=? AND postID=?",(userid,postid))
 	post_info = cur.fetchall()
 
 	conn.commit()

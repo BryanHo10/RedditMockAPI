@@ -127,15 +127,19 @@ def retrieve_post_score(postid):
     if request.method == 'GET':
         return json.dumps({'success':True,'data':voteService.get_unique_post_score(postid)}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+
 @app.route('/reddit-mock/api/v1.0/post/vote/<size>', methods=['GET'])
 def retrieve_list_post(size):
     if request.method == 'GET':
         return json.dumps({'success':True,'data':voteService.get_scores(size)}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
+
 @app.route('/reddit-mock/api/v1.0/post/vote', methods=['GET'])
 def retrieve_unique_list():
     if request.method == 'GET':
         request_json = request.form
+        # print(request_json)
+        print()
         return json.dumps({'success':True,'data':voteService.get_list_scores(request_json["postIDset"])}), 200, {'ContentType':'application/json'}
     return json.dumps({'success':False}), 404, {'ContentType':'application/json'} 
 
