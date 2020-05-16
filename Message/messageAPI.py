@@ -19,7 +19,7 @@ def favorite_message(messageID):
 def get_user_message(userID):
     conn = sqlite3.connect('example.db')
     cur = conn.cursor()
-    cur.execute("SELECT * FROM messages WHERE userTo=?",(userid))
+    cur.execute("SELECT * FROM messages WHERE userTo=?",[userID])
     user_messages_info = cur.fetchall()
     conn.commit()
     conn.close()

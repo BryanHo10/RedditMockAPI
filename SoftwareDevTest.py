@@ -207,36 +207,41 @@ print("----------------------------------------------------------")
 # Create Messages
 message_data=[]
 message_data.append({
-    "userFrom" :user_data[0]["username"],
-    "userTo":user_data[2]["username"],
-    "contents" :"Hey can you keep a secret?"
+    "sender" :user_data[0]["username"],
+    "recipient":user_data[2]["username"],
+    "content" :"Hey can you keep a secret?"
 })
 message_data.append({
-    "userFrom" :user_data[1]["username"],
-    "userTo":user_data[3]["username"],
-    "contents" :"Hey I hear someone talking about us"
+    "sender" :user_data[1]["username"],
+    "recipient":user_data[3]["username"],
+    "content" :"Hey I hear someone talking about us"
 })
 message_data.append({
-    "userFrom" :user_data[2]["username"],
-    "userTo":user_data[0]["username"],
-    "contents" :"sure can..."
+    "sender" :user_data[2]["username"],
+    "recipient":user_data[0]["username"],
+    "content" :"sure can..."
 })
 message_data.append({
-    "userFrom" :user_data[3]["username"],
-    "userTo":user_data[1]["username"],
-    "contents" :"nah man you hearing things"
+    "sender" :user_data[2]["username"],
+    "recipient":user_data[0]["username"],
+    "content" :"wait..."
 })
 message_data.append({
-    "userFrom" :user_data[0]["username"],
-    "userTo":user_data[2]["username"],
-    "contents" :"I don't believe you"
+    "sender" :user_data[3]["username"],
+    "recipient":user_data[1]["username"],
+    "content" :"nah man you hearing things"
+})
+message_data.append({
+    "sender" :user_data[0]["username"],
+    "recipient":user_data[2]["username"],
+    "content" :"I don't believe you"
 })
 
 # View Messages Sent 
 print("----------------------------------------------------------")
 for messaging in message_data:
-    requests.post(base_url+api_url+"user/"+messaging["userFrom"]+"/message",data=messaging)
-    print(messaging["userFrom"] + " sent message to "+ messaging["userTo"]+ " saying: "+" -- { "+messaging["contents"]+" } ")
+    requests.post(base_url+api_url+"user/"+messaging["sender"]+"/message",data=messaging)
+    print(messaging["sender"] + " sent message to "+ messaging["recipient"]+ " saying: "+" -- { "+messaging["content"]+" } ")
     time.sleep(1.5)
 
 
@@ -245,8 +250,19 @@ print("----------------------------------------------------------")
 print("----------------------------------------------------------")
 
 # Delete Message NEEDS WORKKKK
-print("Delete Message bryanHd sent to caessar54")
+print("Print Message caessar54 sent to bryanHd")
 print()
-get_user_message_from = requests.get(base_url+api_url+"user/"+messaging["userFrom"]+"/message", data=messaging)
-delete_message = requests.delete(base_url+api_url+"user/"+messaging["userTo"]+"/message/"+contents, data=messaging)
-print(delete_message,delete_message.text)
+get_user_message_from = requests.get(base_url+api_url+"user/"+messaging["recipient"]+"/message")
+
+for messages in get_user_message_from.json()["data"]:
+    print("Message Data: ",messages)
+
+print()
+print("Delete Message caessar54 sent to bryanHd")
+print()
+delete_message = requests.delete(base_url+api_url+"user/"+messaging["recipient"]+"/message/"+get_user_message_from.json()["data"][0][0])
+
+get_user_message_from = requests.get(base_url+api_url+"user/"+messaging["recipient"]+"/message")
+
+for messages in get_user_message_from.json()["data"]:
+    print("Message Data: ",messages)
